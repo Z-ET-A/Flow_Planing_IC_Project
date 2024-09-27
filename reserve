@@ -1,0 +1,37 @@
+Sub Reserve()
+    Dim wsMain As Worksheet
+    Dim wsHofer As Worksheet
+    Dim wsLowell As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim hoferRow As Long
+    Dim lowellRow As Long
+    ' Define the main sheet and target sheets
+    Set wsMain = ThisWorkbook.Sheets("Reserve data")
+    ' Change to your main sheet name
+    Set wsHofer = ThisWorkbook.Sheets("H")
+    ' Ensure the sheet exists or create it manually
+    Set wsLowell = ThisWorkbook.Sheets("L")
+    hoferRow = wsHofer.Cells(wsHofer.Rows.Count, 1).End(xlUp).Row + 1
+    lowellRow = wsLowell.Cells(wsLowell.Rows.Count, 1).End(xlUp).Row + 1
+    lastRow = wsMain.Cells(wsMain.Rows.Count, "M").End(xlUp).Row
+    For i = 2 To lastRow
+    ' Assuming row 1 has headers
+        If Not IsError(wsMain.Cells(i, 13)) Then
+            If wsMain.Cells(i, 13).Value = "Hofer Reserve" Then
+            ' Copy the entire row to the Hofer sheet
+                wsMain.Rows(i).Copy
+                wsHofer.Rows(hoferRow).PasteSpecial Paste:=xlPasteAll
+                hoferRow = hoferRow + 1
+            ElseIf wsMain.Cells(i, 13).Value = "Lowell Reserve" Then
+            ' Copy the entire row to the Lowell sheet
+            wsMain.Rows(i).Copy
+            wsLowell.Rows(lowellRow).PasteSpecial Paste:=xlPasteAll
+            lowellRow = lowellRow + 1
+            End If
+        End If
+    Next i
+    
+    Application.CutCopyMode = False
+End Sub
+
